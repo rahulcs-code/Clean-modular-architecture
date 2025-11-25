@@ -1,0 +1,61 @@
+name: clean_modular_architecture
+description: >-
+  A Flutter Clean Architecture framework with CLI tooling, custom lint rules,
+  base classes, and code generators. Enforces SOLID principles, repository pattern,
+  and feature-first project structure.
+version: 1.0.0
+homepage: https://github.com/user/clean_modular_architecture
+repository: https://github.com/user/clean_modular_architecture
+issue_tracker: https://github.com/user/clean_modular_architecture/issues
+
+environment:
+  sdk: ^3.0.0
+
+# CLI executable
+executables:
+  clean_arch: clean_arch
+
+dependencies:
+  # Functional programming - Either type for error handling
+  fpdart: ^1.1.0
+
+  # CLI argument parsing
+  args: ^2.4.0
+
+  # Path manipulation
+  path: ^1.9.0
+
+  # Template generation
+  mason: ^0.1.0-dev.58
+
+  # YAML config parsing
+  yaml: ^3.1.0
+
+  # Code generation
+  build: ^2.4.0
+  source_gen: ^1.4.0
+
+  # Annotations and metadata
+  meta: ^1.9.0
+
+  # Collection utilities
+  collection: ^1.18.0
+
+dev_dependencies:
+  # Testing
+  test: ^1.24.0
+  mocktail: ^1.0.0
+
+  # Custom lint rule development
+  custom_lint_builder: ^0.6.0
+  analyzer: ^6.0.0
+
+  # Code generation runner
+  build_runner: ^2.4.0
+
+  # Linting for this package
+  lints: ^3.0.0
+
+# Custom lint configuration
+custom_lint:
+  debug: false
