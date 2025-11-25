@@ -2,6 +2,7 @@
 ///
 /// These annotations are used by the build_runner generators to automatically
 /// generate dependency injection bindings, routes, and other boilerplate.
+library;
 
 /// Marks a class for dependency injection registration.
 ///

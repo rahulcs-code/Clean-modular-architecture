@@ -5,13 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.0] - 2024-01-XX
+## [1.0.0] - 2025-01-XX
 
 ### Added
 
 #### CLI Tool (`clean_arch`)
 - `init` command - Initialize CMA in existing Flutter projects
-- `create` command - Create new Flutter projects with full CMA structure
+- `create` command - Create new Flutter projects with full CMA structure and sample feature
 - `generate` command with subcommands:
   - `feature` - Generate complete feature modules with all layers
   - `bloc` - Generate BLoC with events and states
@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `entity` - Generate domain entity
   - `model` - Generate data model extending entity
   - `usecase` - Generate use case
+  - `service` - Generate service interface and implementation
 - `doctor` command - Check project configuration and structure
 
 #### Custom Lint Rules (16 rules)
