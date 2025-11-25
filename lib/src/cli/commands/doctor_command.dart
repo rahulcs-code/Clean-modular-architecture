@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:path/path.dart' as path;
+import '../../config/cma_config.dart';
 import '../utils/logger.dart';
 import '../utils/file_utils.dart';
 
@@ -53,8 +54,19 @@ class DoctorCommand extends Command<int> {
     // Check 2: CMA configuration
     logger.info('Checking CMA configuration...');
     final cmaConfigFile = File(path.join(projectRoot, 'cma.yaml'));
+    final config = CmaConfig.load(projectRoot);
+
     if (cmaConfigFile.existsSync()) {
       logger.success('CMA configuration file found (cma.yaml)');
+
+      // Validate configuration
+      final configErrors = config.validate();
+      if (configErrors.isNotEmpty) {
+        for (final error in configErrors) {
+          logger.error('  Config error: $error');
+        }
+        hasErrors = true;
+      }
     } else {
       logger.warning('No cma.yaml found - using defaults');
       hasWarnings = true;
@@ -63,8 +75,8 @@ class DoctorCommand extends Command<int> {
     // Check 3: Directory structure
     logger.info('Checking directory structure...');
     final requiredDirs = [
-      'lib/core',
-      'lib/features',
+      config.corePath,
+      config.featuresPath,
     ];
 
     for (final dir in requiredDirs) {
@@ -147,7 +159,7 @@ class DoctorCommand extends Command<int> {
 
     // Check 8: Features structure
     logger.info('Checking features...');
-    final featuresDir = Directory(path.join(projectRoot, 'lib/features'));
+    final featuresDir = Directory(path.join(projectRoot, config.featuresPath));
     if (featuresDir.existsSync()) {
       final features = featuresDir
           .listSync()

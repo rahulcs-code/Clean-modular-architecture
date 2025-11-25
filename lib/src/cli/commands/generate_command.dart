@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:path/path.dart' as path;
+import '../../config/cma_config.dart';
 import '../utils/logger.dart';
 import '../utils/file_utils.dart';
 import '../templates/feature_template.dart';
@@ -92,10 +93,13 @@ class _GenerateFeatureCommand extends Command<int> {
       return 1;
     }
 
+    // Load configuration
+    final config = CmaConfig.load(projectRoot);
+
     final projectName = FileUtils.getProjectName(projectRoot) ?? 'app';
     final featureSnake = FileUtils.toSnakeCase(featureName);
     final featurePascal = FileUtils.toPascalCase(featureName);
-    final featurePath = path.join(projectRoot, 'lib/features', featureSnake);
+    final featurePath = path.join(projectRoot, config.featuresPath, featureSnake);
 
     // Check if feature already exists
     if (Directory(featurePath).existsSync()) {

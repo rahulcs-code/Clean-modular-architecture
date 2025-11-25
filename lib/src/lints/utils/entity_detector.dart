@@ -1,16 +1,28 @@
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:clean_modular_architecture/src/config/cma_config.dart';
 
 /// Utility to detect if a class is a domain entity.
 class EntityDetector {
   /// Determines if a class declaration is an entity based on:
   /// - File path contains '/domain/entities/' or '/entities/'
   /// - Class name doesn't end with 'Model'
-  static bool isEntity(ClassDeclaration node, String filePath) {
+  /// - Optional: Configurable patterns from cma.yaml
+  static bool isEntity(
+    ClassDeclaration node,
+    String filePath, {
+    CmaConfig? config,
+  }) {
     final className = node.name.lexeme;
+    final effectiveConfig = config ?? CmaConfig.defaults;
 
     // Skip if it's a Model class
-    if (className.endsWith('Model')) {
+    if (className.endsWith(effectiveConfig.modelSuffix)) {
       return false;
+    }
+
+    // Check if file is in entities directory using config
+    if (effectiveConfig.isEntityPath(filePath)) {
+      return true;
     }
 
     // Check if file is in entities directory

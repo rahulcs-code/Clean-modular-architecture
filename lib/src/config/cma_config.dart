@@ -190,4 +190,178 @@ class CmaConfig {
     final normalized = filePath.replaceAll('\\', '/').toLowerCase();
     return normalized.contains('/presentation/');
   }
+
+  /// Checks if a path is in the core directory.
+  bool isCorePath(String filePath) {
+    final normalized = filePath.replaceAll('\\', '/').toLowerCase();
+    return normalized.contains(corePath.toLowerCase()) ||
+        normalized.contains('/core/');
+  }
+
+  /// Checks if a path is a global cubit (in core/common/cubits/).
+  bool isGlobalCubitPath(String filePath) {
+    final normalized = filePath.replaceAll('\\', '/').toLowerCase();
+    return normalized.contains('/core/common/cubits/') ||
+        normalized.contains('/core/cubits/');
+  }
+
+  /// Checks if a path is a repository interface (in domain/repositories/).
+  bool isRepositoryInterfacePath(String filePath) {
+    final normalized = filePath.replaceAll('\\', '/').toLowerCase();
+    return normalized.contains('/domain/repositories/');
+  }
+
+  /// Gets the expected model class name for an entity.
+  String getModelNameForEntity(String entityName) {
+    if (entitySuffix.isNotEmpty && entityName.endsWith(entitySuffix)) {
+      final baseName = entityName.substring(
+        0,
+        entityName.length - entitySuffix.length,
+      );
+      return '$baseName$modelSuffix';
+    }
+    return '$entityName$modelSuffix';
+  }
+
+  /// Gets the expected entity class name for a model.
+  String getEntityNameForModel(String modelName) {
+    if (modelSuffix.isNotEmpty && modelName.endsWith(modelSuffix)) {
+      final baseName = modelName.substring(
+        0,
+        modelName.length - modelSuffix.length,
+      );
+      return '$baseName$entitySuffix';
+    }
+    return modelName;
+  }
+
+  /// Validates the configuration and returns a list of errors.
+  List<String> validate() {
+    final errors = <String>[];
+
+    if (featuresPath.isEmpty) {
+      errors.add('features_path cannot be empty');
+    }
+    if (corePath.isEmpty) {
+      errors.add('core_path cannot be empty');
+    }
+    if (modelSuffix.isEmpty) {
+      errors.add('model_suffix cannot be empty');
+    }
+
+    // Validate severity values
+    const validSeverities = ['error', 'warning', 'info', 'ignore'];
+    for (final entry in lintSeverity.entries) {
+      if (!validSeverities.contains(entry.value)) {
+        errors.add('Invalid severity "${entry.value}" for rule "${entry.key}"');
+      }
+    }
+
+    // Validate state management
+    const validStateManagement = ['bloc', 'cubit', 'riverpod', 'provider'];
+    if (!validStateManagement.contains(stateManagement)) {
+      errors.add('Invalid state_management: $stateManagement');
+    }
+
+    // Validate DI package
+    const validDiPackages = ['get_it', 'injectable', 'riverpod'];
+    if (!validDiPackages.contains(diPackage)) {
+      errors.add('Invalid di_package: $diPackage');
+    }
+
+    return errors;
+  }
+
+  /// Generates a YAML string representation of this config.
+  String toYaml() {
+    final severityYaml = lintSeverity.entries
+        .map((e) => '      ${e.key}: ${e.value}')
+        .join('\n');
+
+    return '''
+clean_modular_architecture:
+  structure:
+    features_path: $featuresPath
+    core_path: $corePath
+    entity_patterns:
+${entityPatterns.map((p) => '      - "$p"').join('\n')}
+    model_patterns:
+${modelPatterns.map((p) => '      - "$p"').join('\n')}
+  naming:
+    entity_suffix: "$entitySuffix"
+    model_suffix: "$modelSuffix"
+    repository_suffix: "$repositorySuffix"
+    bloc_suffix: "$blocSuffix"
+    cubit_suffix: "$cubitSuffix"
+  lint:
+    enabled: $lintEnabled
+    severity:
+$severityYaml
+  templates:
+    state_management: $stateManagement
+    di_package: $diPackage
+''';
+  }
+
+  /// Creates a copy with modified values.
+  CmaConfig copyWith({
+    String? featuresPath,
+    String? corePath,
+    String? entitySuffix,
+    String? modelSuffix,
+    String? repositorySuffix,
+    String? blocSuffix,
+    String? cubitSuffix,
+    bool? lintEnabled,
+    Map<String, String>? lintSeverity,
+    String? stateManagement,
+    String? diPackage,
+    List<String>? entityPatterns,
+    List<String>? modelPatterns,
+  }) {
+    return CmaConfig(
+      featuresPath: featuresPath ?? this.featuresPath,
+      corePath: corePath ?? this.corePath,
+      entitySuffix: entitySuffix ?? this.entitySuffix,
+      modelSuffix: modelSuffix ?? this.modelSuffix,
+      repositorySuffix: repositorySuffix ?? this.repositorySuffix,
+      blocSuffix: blocSuffix ?? this.blocSuffix,
+      cubitSuffix: cubitSuffix ?? this.cubitSuffix,
+      lintEnabled: lintEnabled ?? this.lintEnabled,
+      lintSeverity: lintSeverity ?? this.lintSeverity,
+      stateManagement: stateManagement ?? this.stateManagement,
+      diPackage: diPackage ?? this.diPackage,
+      entityPatterns: entityPatterns ?? this.entityPatterns,
+      modelPatterns: modelPatterns ?? this.modelPatterns,
+    );
+  }
+}
+
+/// Severity levels for lint rules.
+abstract class LintSeverity {
+  static const String error = 'error';
+  static const String warning = 'warning';
+  static const String info = 'info';
+  static const String ignore = 'ignore';
+
+  static const List<String> values = [error, warning, info, ignore];
+}
+
+/// State management options.
+abstract class StateManagement {
+  static const String bloc = 'bloc';
+  static const String cubit = 'cubit';
+  static const String riverpod = 'riverpod';
+  static const String provider = 'provider';
+
+  static const List<String> values = [bloc, cubit, riverpod, provider];
+}
+
+/// Dependency injection package options.
+abstract class DiPackage {
+  static const String getIt = 'get_it';
+  static const String injectable = 'injectable';
+  static const String riverpod = 'riverpod';
+
+  static const List<String> values = [getIt, injectable, riverpod];
 }

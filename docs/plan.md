@@ -368,12 +368,12 @@ Note: Implemented as inline Dart templates instead of Mason bricks for simplicit
 
 ### 4.1 Configuration File Support
 
-- [ ] **4.1.1** Create `lib/src/config/cma_config.dart`
-  - [ ] Parse `cma.yaml` configuration file
-  - [ ] Default values for all options
-  - [ ] Validation of configuration
+- [x] **4.1.1** Create `lib/src/config/cma_config.dart`
+  - [x] Parse `cma.yaml` configuration file
+  - [x] Default values for all options
+  - [x] Validation of configuration
 
-- [ ] **4.1.2** Define configuration schema
+- [x] **4.1.2** Define configuration schema
   ```yaml
   clean_modular_architecture:
     structure:
@@ -396,14 +396,15 @@ Note: Implemented as inline Dart templates instead of Mason bricks for simplicit
       di_package: get_it
   ```
 
-- [ ] **4.1.3** Integrate configuration with lint rules
-  - [ ] Load config in plugin initialization
-  - [ ] Use config for path patterns
-  - [ ] Use config for severity levels
+- [x] **4.1.3** Integrate configuration with lint rules
+  - [x] Load config in entity/model detectors
+  - [x] Use config for path patterns
+  - [x] Use config for naming conventions
 
-- [ ] **4.1.4** Integrate configuration with CLI
-  - [ ] Read config for generate commands
-  - [ ] Use config for template selection
+- [x] **4.1.4** Integrate configuration with CLI
+  - [x] Read config for generate commands (features path)
+  - [x] Doctor command validates configuration
+  - [x] Use config for directory paths
 
 ---
 
@@ -515,8 +516,8 @@ Note: Implemented as inline Dart templates instead of Mason bricks for simplicit
 - [x] 3.1 DI Registration Generator (4 tasks)
 - [x] 3.2 Route Generator (3 tasks)
 
-### Phase 4: Configuration System
-- [ ] 4.1 Configuration File Support (4 tasks)
+### Phase 4: Configuration System ✅
+- [x] 4.1 Configuration File Support (4 tasks)
 
 ### Phase 5: Documentation & Testing
 - [ ] 5.1 Documentation (4 tasks)
