@@ -76,13 +76,19 @@ class FileUtils {
 
   /// Converts a string to PascalCase.
   static String toPascalCase(String input) {
-    return input
-        .replaceAll(RegExp(r'[-_\s]+'), ' ')
-        .split(' ')
-        .map((word) => word.isEmpty
-            ? ''
-            : '${word[0].toUpperCase()}${word.substring(1).toLowerCase()}')
-        .join();
+    // If input contains separators, split by them
+    if (RegExp(r'[-_\s]').hasMatch(input)) {
+      return input
+          .replaceAll(RegExp(r'[-_\s]+'), ' ')
+          .split(' ')
+          .map((word) => word.isEmpty
+              ? ''
+              : '${word[0].toUpperCase()}${word.substring(1).toLowerCase()}')
+          .join();
+    }
+    // If already in PascalCase or camelCase, just capitalize first letter
+    if (input.isEmpty) return input;
+    return '${input[0].toUpperCase()}${input.substring(1)}';
   }
 
   /// Converts a string to camelCase.

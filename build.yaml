@@ -1,0 +1,42 @@
+# Build configuration for clean_modular_architecture code generators
+# See: https://pub.dev/packages/build_config
+
+targets:
+  $default:
+    builders:
+      clean_modular_architecture|di:
+        enabled: true
+        generate_for:
+          include:
+            - lib/**/*.dart
+          exclude:
+            - lib/**/*.g.dart
+            - lib/**/*.freezed.dart
+        options: {}
+
+      clean_modular_architecture|routes:
+        enabled: true
+        generate_for:
+          include:
+            - lib/**/presentation/pages/*.dart
+            - lib/**/pages/*.dart
+          exclude:
+            - lib/**/*.g.dart
+        options: {}
+
+builders:
+  di:
+    import: "package:clean_modular_architecture/src/generators/di_generator.dart"
+    builder_factories: ["diBuilder"]
+    build_extensions: {".dart": [".di.g.part"]}
+    auto_apply: dependents
+    build_to: cache
+    applies_builders: ["source_gen|combining_builder"]
+
+  routes:
+    import: "package:clean_modular_architecture/src/generators/route_generator.dart"
+    builder_factories: ["routeBuilder"]
+    build_extensions: {".dart": [".routes.g.part"]}
+    auto_apply: dependents
+    build_to: cache
+    applies_builders: ["source_gen|combining_builder"]

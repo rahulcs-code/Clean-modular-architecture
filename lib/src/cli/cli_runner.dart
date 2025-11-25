@@ -41,7 +41,7 @@ class CleanArchCommandRunner extends CommandRunner<int> {
   }
 
   @override
-  Future<int> run(Iterable<String> args) async {
+  Future<int?> run(Iterable<String> args) async {
     try {
       final results = parse(args);
 

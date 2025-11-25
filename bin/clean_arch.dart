@@ -14,8 +14,8 @@ Future<void> main(List<String> arguments) async {
   final runner = CleanArchCommandRunner();
 
   try {
-    final exitCode = await runner.run(arguments) ?? 0;
-    exit(exitCode);
+    final exitCode = await runner.run(arguments);
+    exit(exitCode ?? 0);
   } on Exception catch (e) {
     stderr.writeln('Error: $e');
     exit(1);

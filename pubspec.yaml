@@ -41,14 +41,14 @@ dependencies:
   # Collection utilities
   collection: ^1.18.0
 
+  # Custom lint rule development (must be in dependencies for lib/ code)
+  custom_lint_builder: ^0.6.0
+  analyzer: ^6.0.0
+
 dev_dependencies:
   # Testing
   test: ^1.24.0
   mocktail: ^1.0.0
-
-  # Custom lint rule development
-  custom_lint_builder: ^0.6.0
-  analyzer: ^6.0.0
 
   # Code generation runner
   build_runner: ^2.4.0

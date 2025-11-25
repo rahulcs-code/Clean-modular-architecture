@@ -232,8 +232,6 @@ linter:
   }
 
   Future<void> _createCoreErrorFiles(String projectPath, bool force) async {
-    final projectName = FileUtils.getProjectName(projectPath) ?? 'app';
-
     // Create exceptions.dart
     final exceptionsPath = path.join(projectPath, 'lib/core/errors/exceptions.dart');
     if (!File(exceptionsPath).existsSync() || force) {

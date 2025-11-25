@@ -121,13 +121,13 @@ A Flutter dev dependency package that enforces Clean Architecture patterns throu
   - [x] `AuthException` extends AppException
   - [x] `ValidationException` extends AppException with `errors` map
 
-- [ ] **1.2.5** Create `lib/src/base/base.dart` barrel export file
-  - Export all base classes (skipped - exports directly in main library file)
+- [x] **1.2.5** Create `lib/src/base/base.dart` barrel export file
+  - Export all base classes
 
-- [ ] **1.2.6** Write unit tests for base classes
-  - [ ] Test UseCase contract
-  - [ ] Test Failure equality
-  - [ ] Test Exception messages
+- [x] **1.2.6** Write unit tests for base classes
+  - [x] Test UseCase contract
+  - [x] Test Failure equality
+  - [x] Test Exception messages
 
 ---
 
@@ -162,13 +162,13 @@ A Flutter dev dependency package that enforces Clean Architecture patterns throu
   - [x] Add `usecase` subcommand
   - [x] Add `entity` subcommand
   - [x] Add `model` subcommand
-  - [ ] Add `service` subcommand (deferred)
+  - [ ] Add `service` subcommand 
 
 - [x] **1.3.5** Create `lib/src/cli/commands/create_command.dart`
   - [x] Create new Flutter project with full CMA structure
   - [x] Initialize pubspec.yaml with recommended dependencies
   - [x] Set up complete folder structure
-  - [ ] Create sample feature (optional - deferred)
+  - [ ] Create sample feature 
 
 - [x] **1.3.6** Create `lib/src/cli/commands/doctor_command.dart`
   - [x] Check project structure compliance
@@ -215,7 +215,7 @@ Note: Implemented as inline Dart templates instead of Mason bricks for simplicit
   - [x] `createPlugin()` function returning `PluginBase`
   - [x] `CleanArchLintPlugin` class extending `PluginBase`
   - [x] `getLintRules()` returning list of all rules
-  - [ ] `getAssists()` returning list of quick fixes (deferred)
+  - [ ] `getAssists()` returning list of quick fixes 
 
 - [x] **2.1.2** Create `lib/src/lints/utils/entity_detector.dart`
   - [x] `isEntity(ClassDeclaration node, String path)` - check if class is an entity
@@ -248,12 +248,12 @@ Note: Implemented as inline Dart templates instead of Mason bricks for simplicit
   - [x] Error severity: ERROR
   - [x] Message: "Entities should not have serialization methods. Move serialization to the Model class."
 
-- [ ] **2.2.5** Create `lib/src/lints/rules/entity_no_getters.dart` (deferred)
-  - [ ] Detect computed getters in entities
+- [x] **2.2.5** Create `lib/src/lints/rules/entity_no_getters.dart`
+  - [x] Detect computed getters in entities
 
-- [ ] **2.2.6** Write tests for entity rules
-  - [ ] Test with violation examples
-  - [ ] Test with correct entity examples
+- [x] **2.2.6** Write tests for entity rules
+  - [x] Test with violation examples
+  - [x] Test with correct entity examples
 
 ---
 
@@ -264,18 +264,18 @@ Note: Implemented as inline Dart templates instead of Mason bricks for simplicit
   - [x] Error severity: ERROR
   - [x] Message: "Model classes should extend their corresponding Entity."
 
-- [ ] **2.3.2** Create `lib/src/lints/rules/model_naming_convention.dart` (deferred)
-  - [ ] Verify model class names end with "Model"
+- [x] **2.3.2** Create `lib/src/lints/rules/model_naming_convention.dart`
+  - [x] Verify model class names end with "Model"
 
-- [ ] **2.3.3** Write tests for model rules
+- [x] **2.3.3** Write tests for model rules
 
 ---
 
-### 2.4 Repository Rules (Deferred to Phase 2 continuation)
+### 2.4 Repository Rules
 
-- [ ] **2.4.1** Create `lib/src/lints/rules/repository_interface_returns_entity.dart`
-- [ ] **2.4.2** Create `lib/src/lints/rules/repository_uses_abstract_interface.dart`
-- [ ] **2.4.3** Write tests for repository rules
+- [x] **2.4.1** Create `lib/src/lints/rules/repository_interface_returns_entity.dart`
+- [x] **2.4.2** Create `lib/src/lints/rules/repository_uses_abstract_interface.dart`
+- [x] **2.4.3** Write tests for repository rules
 
 ---
 
@@ -293,10 +293,10 @@ Note: Implemented as inline Dart templates instead of Mason bricks for simplicit
   - [x] Error severity: ERROR
   - [x] Message: "Domain layer should not import from presentation layer."
 
-- [ ] **2.5.3** Create `lib/src/lints/rules/data_no_presentation_imports.dart` (deferred)
-  - [ ] Detect imports from presentation layer in data files
+- [x] **2.5.3** Create `lib/src/lints/rules/data_no_presentation_imports.dart`
+  - [x] Detect imports from presentation layer in data files
 
-- [ ] **2.5.4** Write tests for import rules
+- [x] **2.5.4** Write tests for import rules
 
 ---
 
@@ -308,16 +308,16 @@ Note: Implemented as inline Dart templates instead of Mason bricks for simplicit
   - [x] Error severity: ERROR
   - [x] Message: "BLoCs and Cubits should be registered with registerLazySingleton."
 
-- [ ] **2.6.2** Create `lib/src/lints/rules/bloc_in_multiprovider.dart` (deferred)
-- [ ] **2.6.3** Write tests for DI rules
+- [x] **2.6.2** Create `lib/src/lints/rules/bloc_in_multiprovider.dart`
+- [x] **2.6.3** Write tests for DI rules
 
 ---
 
-### 2.7 BLoC/Cubit Rules (Deferred)
+### 2.7 BLoC/Cubit Rules
 
-- [ ] **2.7.1** Create `lib/src/lints/rules/bloc_naming_convention.dart`
-- [ ] **2.7.2** Create `lib/src/lints/rules/cubit_simple_state.dart`
-- [ ] **2.7.3** Write tests for BLoC/Cubit rules
+- [x] **2.7.1** Create `lib/src/lints/rules/bloc_naming_convention.dart`
+- [x] **2.7.2** Create `lib/src/lints/rules/cubit_simple_state.dart`
+- [x] **2.7.3** Write tests for BLoC/Cubit rules
 
 ---
 
@@ -325,42 +325,42 @@ Note: Implemented as inline Dart templates instead of Mason bricks for simplicit
 
 ### 3.1 DI Registration Generator
 
-- [ ] **3.1.1** Create `lib/src/generators/annotations.dart`
-  - [ ] `@Injectable()` annotation for classes to be registered
-  - [ ] `@LazySingleton()` annotation
-  - [ ] `@Singleton()` annotation
-  - [ ] `@Module()` annotation for grouping
+- [x] **3.1.1** Create `lib/src/generators/annotations.dart`
+  - [x] `@Injectable()` annotation for classes to be registered
+  - [x] `@LazySingleton()` annotation
+  - [x] `@Singleton()` annotation
+  - [x] `@Module()` annotation for grouping
 
-- [ ] **3.1.2** Create `lib/src/generators/di_generator.dart`
-  - [ ] Scan for annotated classes
-  - [ ] Generate `injection_container.g.dart`
-  - [ ] Generate `registerLazySingleton` calls
-  - [ ] Resolve dependency order
-  - [ ] Support for abstract/interface types
+- [x] **3.1.2** Create `lib/src/generators/di_generator.dart`
+  - [x] Scan for annotated classes
+  - [x] Generate `injection_container.g.dart`
+  - [x] Generate `registerLazySingleton` calls
+  - [x] Resolve dependency order
+  - [x] Support for abstract/interface types
 
-- [ ] **3.1.3** Create `lib/builder.yaml` for build_runner configuration
-  - [ ] Configure DI generator builder
-  - [ ] Set up build extensions
+- [x] **3.1.3** Create `build.yaml` for build_runner configuration
+  - [x] Configure DI generator builder
+  - [x] Set up build extensions
 
-- [ ] **3.1.4** Write tests for DI generator
-  - [ ] Test annotation detection
-  - [ ] Test code generation output
-  - [ ] Test dependency resolution
+- [x] **3.1.4** Write tests for DI generator
+  - [x] Test annotation detection
+  - [x] Test code generation output
+  - [x] Test dependency resolution
 
 ---
 
-### 3.2 Route Generator (Optional)
+### 3.2 Route Generator
 
-- [ ] **3.2.1** Create route annotations
-  - [ ] `@Route()` annotation for pages
-  - [ ] `@RouteGuard()` annotation for guards
+- [x] **3.2.1** Create route annotations
+  - [x] `@RoutePage()` annotation for pages
+  - [x] `@RouteGuard()` annotation for guards
 
-- [ ] **3.2.2** Create route generator
-  - [ ] Scan for annotated pages
-  - [ ] Generate go_router configuration
-  - [ ] Generate route constants
+- [x] **3.2.2** Create route generator
+  - [x] Scan for annotated pages
+  - [x] Generate go_router configuration
+  - [x] Generate route constants
 
-- [ ] **3.2.3** Write tests for route generator
+- [x] **3.2.3** Write tests for route generator
 
 ---
 
@@ -496,24 +496,24 @@ Note: Implemented as inline Dart templates instead of Mason bricks for simplicit
 
 ## Summary Checklist
 
-### Phase 1: Package Foundation
+### Phase 1: Package Foundation ✅
 - [x] 1.1 Project Structure Setup (7 tasks)
 - [x] 1.2 Base Classes Implementation (6 tasks)
 - [x] 1.3 CLI Foundation (8 tasks)
-- [x] 1.4 Code Generation Templates (7 tasks - inline Dart templates)
+- [x] 1.4 Inline Templates (7 tasks)
 
-### Phase 2: Custom Lint Rules
+### Phase 2: Custom Lint Rules ✅
 - [x] 2.1 Lint Plugin Setup (3 tasks)
-- [x] 2.2 Entity Rules (4 of 6 tasks - core rules implemented)
-- [x] 2.3 Model Rules (1 of 3 tasks - core rule implemented)
-- [ ] 2.4 Repository Rules (3 tasks - deferred)
-- [x] 2.5 Import Restriction Rules (2 of 4 tasks)
-- [x] 2.6 DI Rules (1 of 3 tasks)
-- [ ] 2.7 BLoC/Cubit Rules (3 tasks - deferred)
+- [x] 2.2 Entity Rules (6 tasks)
+- [x] 2.3 Model Rules (3 tasks)
+- [x] 2.4 Repository Rules (3 tasks)
+- [x] 2.5 Import Restriction Rules (4 tasks)
+- [x] 2.6 DI Rules (3 tasks)
+- [x] 2.7 BLoC/Cubit Rules (3 tasks)
 
-### Phase 3: Code Generators
-- [ ] 3.1 DI Registration Generator (4 tasks)
-- [ ] 3.2 Route Generator (3 tasks)
+### Phase 3: Code Generators ✅
+- [x] 3.1 DI Registration Generator (4 tasks)
+- [x] 3.2 Route Generator (3 tasks)
 
 ### Phase 4: Configuration System
 - [ ] 4.1 Configuration File Support (4 tasks)
@@ -529,4 +529,3 @@ Note: Implemented as inline Dart templates instead of Mason bricks for simplicit
 ---
 
 **Total Tasks:** 82 tasks across 6 phases
-**Completed:** Phase 1 + Core lint rules from Phase 2
