@@ -4,9 +4,9 @@ description: >-
   base classes, and code generators. Enforces SOLID principles, repository pattern,
   and feature-first project structure.
 version: 1.0.0
-homepage: https://github.com/user/clean_modular_architecture
-repository: https://github.com/user/clean_modular_architecture
-issue_tracker: https://github.com/user/clean_modular_architecture/issues
+homepage: https://github.com/rahulcs-code/Clean-modular-architecture
+repository: https://github.com/rahulcs-code/Clean-modular-architecture
+issue_tracker: https://github.com/rahulcs-code/Clean-modular-architecture/issues
 
 environment:
   sdk: ^3.0.0

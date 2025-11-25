@@ -20,7 +20,7 @@ Add the package to your `pubspec.yaml` via Git:
 dev_dependencies:
   clean_modular_architecture:
     git:
-      url: https://github.com/user/clean_modular_architecture.git
+      url: https://github.com/rahulcs-code/Clean-modular-architecture.git
       ref: main
   custom_lint: ^0.8.0
 ```
