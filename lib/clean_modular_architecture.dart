@@ -42,6 +42,9 @@
 /// ```
 library clean_modular_architecture;
 
+import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'src/lints/plugin.dart';
+
 // Base classes
 export 'src/base/use_case.dart';
 export 'src/base/failure.dart';
@@ -53,3 +56,6 @@ export 'src/generators/annotations.dart';
 
 // Configuration
 export 'src/config/cma_config.dart';
+
+/// Entry point for custom_lint plugin.
+PluginBase createPlugin() => CleanArchLintPlugin();
