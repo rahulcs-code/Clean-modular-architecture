@@ -2,7 +2,6 @@
 
 A Flutter dev dependency that enforces Clean Architecture patterns through CLI tooling, custom lint rules, base classes, and code generators.
 
-[![Pub Version](https://img.shields.io/pub/v/clean_modular_architecture)](https://pub.dev/packages/clean_modular_architecture)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 ## Features
@@ -15,17 +14,24 @@ A Flutter dev dependency that enforces Clean Architecture patterns through CLI t
 
 ## Installation
 
-Install the package and its dependencies using `flutter pub add`:
+Add the package to your `pubspec.yaml` via Git:
+
+```yaml
+dev_dependencies:
+  clean_modular_architecture:
+    git:
+      url: https://github.com/user/clean_modular_architecture.git
+      ref: main
+  custom_lint: ^0.8.0
+```
+
+Then add the required production dependencies:
 
 ```bash
-# Add dev dependencies
-flutter pub add --dev clean_modular_architecture custom_lint
-
-# Add required production dependencies
 flutter pub add fpdart flutter_bloc equatable get_it go_router
 ```
 
-Then enable custom_lint in `analysis_options.yaml`:
+Enable custom_lint in `analysis_options.yaml`:
 
 ```yaml
 analyzer:
@@ -33,7 +39,7 @@ analyzer:
     - custom_lint
 ```
 
-> **Note:** Always use `flutter pub add` or `dart pub add` to install dependencies. This ensures you get the latest compatible versions automatically.
+Finally, run `flutter pub get` to install all dependencies.
 
 ## Quick Start
 

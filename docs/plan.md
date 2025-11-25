@@ -467,30 +467,26 @@ Note: Implemented as inline Dart templates instead of Mason bricks for simplicit
 
 ---
 
-## Phase 6: Publishing Preparation
+## Phase 6: Publishing Preparation (GitHub-only)
 
 ### 6.1 Package Finalization
 
-- [ ] **6.1.1** Run `dart pub publish --dry-run`
-  - [ ] Fix any publishing warnings
-  - [ ] Verify package score
+- [x] **6.1.1** Add MIT `LICENSE` file
 
-- [ ] **6.1.2** Add `LICENSE` file
-  - [ ] Choose appropriate license (MIT recommended)
+- [x] **6.1.2** Update README with GitHub installation instructions
+  - [x] Git-based dependency in pubspec.yaml
+  - [x] Required production dependencies
 
-- [ ] **6.1.3** Verify `pubspec.yaml` metadata
-  - [ ] Homepage URL
-  - [ ] Repository URL
-  - [ ] Issue tracker URL
-  - [ ] Topics/keywords
+- [x] **6.1.3** Verify package works locally
+  - [x] All tests pass (112+ tests)
+  - [x] CLI commands work correctly
+  - [x] Lint rules load properly
 
-- [ ] **6.1.4** Test global activation
-  - [ ] `dart pub global activate --source path .`
-  - [ ] Verify `clean_arch` command works globally
+- [x] **6.1.4** Update plan to reflect GitHub-only usage
 
-- [ ] **6.1.5** Create release tag
+- [ ] **6.1.5** Create release tag (manual step)
   - [ ] Tag version 1.0.0
-  - [ ] Publish to pub.dev
+  - [ ] Push to GitHub repository
 
 ---
 
@@ -523,8 +519,8 @@ Note: Implemented as inline Dart templates instead of Mason bricks for simplicit
 - [x] 5.2 Testing (4 tasks)
 - [x] 5.3 Example Project (2 tasks)
 
-### Phase 6: Publishing Preparation
-- [ ] 6.1 Package Finalization (5 tasks)
+### Phase 6: Publishing Preparation (GitHub-only) ✅
+- [x] 6.1 Package Finalization (5 tasks - tag creation is manual)
 
 ---
 
