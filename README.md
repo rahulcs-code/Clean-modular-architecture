@@ -47,31 +47,33 @@ Finally, run `flutter pub get` to install all dependencies.
 
 ```bash
 # Initialize CMA in an existing Flutter project
-dart run clean_arch init
+dart run clean_modular_architecture:clean_arch init
 
 # Or create a new project with CMA structure
-dart run clean_arch create my_app
+dart run clean_modular_architecture:clean_arch create my_app
 ```
 
 ### Generate Components
 
 ```bash
 # Generate a complete feature with all layers
-dart run clean_arch generate feature auth
+dart run clean_modular_architecture:clean_arch generate feature auth
 
 # Generate individual components
-dart run clean_arch generate bloc login --feature auth
-dart run clean_arch generate cubit theme --global
-dart run clean_arch generate repository user --feature auth
-dart run clean_arch generate entity user --feature auth
-dart run clean_arch generate model user --feature auth
-dart run clean_arch generate usecase login_with_email --feature auth
+dart run clean_modular_architecture:clean_arch g bloc login --feature auth
+dart run clean_modular_architecture:clean_arch g cubit theme --global
+dart run clean_modular_architecture:clean_arch g repository user --feature auth
+dart run clean_modular_architecture:clean_arch g entity user --feature auth
+dart run clean_modular_architecture:clean_arch g model user --feature auth
+dart run clean_modular_architecture:clean_arch g usecase login_with_email --feature auth
 ```
+
+> **Tip:** You can create a shell alias for convenience: `alias clean_arch="dart run clean_modular_architecture:clean_arch"`
 
 ### Check Project Health
 
 ```bash
-dart run clean_arch doctor
+dart run clean_modular_architecture:clean_arch doctor
 ```
 
 ## Architecture Overview
