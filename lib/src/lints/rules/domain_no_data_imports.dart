@@ -47,7 +47,7 @@ class DomainNoDataImports extends DartLintRule {
 
       // Check if importing from data layer
       if (_isDataLayerImport(importUri, path)) {
-        reporter.reportErrorForNode(_code, node);
+        reporter.atNode(node, _code);
       }
     });
   }

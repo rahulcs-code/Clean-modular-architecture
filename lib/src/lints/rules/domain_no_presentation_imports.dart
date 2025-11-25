@@ -55,12 +55,12 @@ class DomainNoPresentationImports extends DartLintRule {
 
       // Check if importing from presentation layer
       if (_isPresentationLayerImport(importUri)) {
-        reporter.reportErrorForNode(_code, node);
+        reporter.atNode(node, _code);
       }
 
       // Check if importing Flutter UI packages
       if (_flutterUiPackages.contains(importUri)) {
-        reporter.reportErrorForNode(_code, node);
+        reporter.atNode(node, _code);
       }
     });
   }

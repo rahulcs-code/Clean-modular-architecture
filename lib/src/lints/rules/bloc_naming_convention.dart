@@ -64,17 +64,17 @@ class BlocNamingConvention extends DartLintRule {
 
         // Check if extends Bloc
         if (superclassName == 'Bloc' && !className.endsWith('Bloc')) {
-          reporter.reportErrorForToken(_blocCode, node.name);
+          reporter.atToken(node.name, _blocCode);
         }
 
         // Check if extends Equatable and is event-like
         if (_isEventClass(node, path) && !className.endsWith('Event')) {
-          reporter.reportErrorForToken(_eventCode, node.name);
+          reporter.atToken(node.name, _eventCode);
         }
 
         // Check if extends Equatable and is state-like
         if (_isStateClass(node, path) && !className.endsWith('State')) {
-          reporter.reportErrorForToken(_stateCode, node.name);
+          reporter.atToken(node.name, _stateCode);
         }
       }
     });

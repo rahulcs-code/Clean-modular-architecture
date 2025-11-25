@@ -67,13 +67,13 @@ class EntityNoSerialization extends DartLintRule {
       for (final member in node.members) {
         if (member is MethodDeclaration) {
           if (_serializationMethods.contains(member.name.lexeme)) {
-            reporter.reportErrorForNode(_code, member);
+            reporter.atNode(member, _code);
           }
         }
         if (member is ConstructorDeclaration) {
           final name = member.name?.lexeme;
           if (name != null && _serializationMethods.contains(name)) {
-            reporter.reportErrorForNode(_code, member);
+            reporter.atNode(member, _code);
           }
         }
       }

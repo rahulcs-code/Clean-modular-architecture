@@ -76,7 +76,7 @@ class CubitSimpleState extends DartLintRule {
         if (member is FieldDeclaration) {
           final typeName = member.fields.type?.toString() ?? '';
           if (_isComplexDependency(typeName)) {
-            reporter.reportErrorForNode(_code, member);
+            reporter.atNode(member, _code);
           }
         }
 
@@ -84,7 +84,7 @@ class CubitSimpleState extends DartLintRule {
         if (member is MethodDeclaration) {
           if (member.isAbstract) continue;
           if (_hasComplexAsyncLogic(member)) {
-            reporter.reportErrorForNode(_code, member);
+            reporter.atNode(member, _code);
           }
         }
       }

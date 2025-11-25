@@ -107,10 +107,10 @@ class CreateCommand extends Command<int> {
     await _createCoreFiles(projectPath, projectName);
     logger.success('Core files created');
 
-    // Update pubspec.yaml
-    logger.progress('Updating pubspec.yaml...');
-    await _updatePubspec(projectPath, projectName, description);
-    logger.success('pubspec.yaml updated');
+    // Install dependencies using pub add
+    logger.progress('Installing dependencies...');
+    await _installDependencies(projectPath);
+    logger.success('Dependencies installed');
 
     // Update analysis_options.yaml
     logger.progress('Updating analysis_options.yaml...');
@@ -122,6 +122,11 @@ class CreateCommand extends Command<int> {
     await _updateMainDart(projectPath, projectName);
     logger.success('main.dart updated');
 
+    // Create sample feature
+    logger.progress('Creating sample feature...');
+    await _createSampleFeature(projectPath, projectName);
+    logger.success('Sample feature created');
+
     logger.newLine();
     logger.success('Project "$projectName" created successfully!');
     logger.newLine();
@@ -130,8 +135,8 @@ class CreateCommand extends Command<int> {
     logger.command('cd $projectName');
     logger.list(['Get dependencies:']);
     logger.command('flutter pub get');
-    logger.list(['Generate your first feature:']);
-    logger.command('dart run clean_arch generate feature auth');
+    logger.list(['Run the app:']);
+    logger.command('flutter run');
 
     return 0;
   }
@@ -315,55 +320,49 @@ Future<void> init() async {
     );
   }
 
-  Future<void> _updatePubspec(
-    String projectPath,
-    String projectName,
-    String description,
-  ) async {
-    final pubspecPath = path.join(projectPath, 'pubspec.yaml');
-    final pubspecFile = File(pubspecPath);
-    var content = await pubspecFile.readAsString();
+  Future<void> _installDependencies(String projectPath) async {
+    // Install production dependencies using flutter pub add
+    final prodDeps = [
+      'fpdart',
+      'flutter_bloc',
+      'equatable',
+      'get_it',
+      'go_router',
+    ];
 
-    // Add dependencies
-    const dependencies = '''
-dependencies:
-  flutter:
-    sdk: flutter
-  cupertino_icons: ^1.0.2
-  # Clean Architecture dependencies
-  fpdart: ^1.1.0
-  flutter_bloc: ^8.1.3
-  equatable: ^2.0.5
-  get_it: ^7.6.0
-''';
-
-    const devDependencies = '''
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  flutter_lints: ^3.0.0
-  clean_modular_architecture: ^1.0.0
-  custom_lint: ^0.6.0
-  mocktail: ^1.0.0
-''';
-
-    // Replace dependencies section
-    content = content.replaceFirst(
-      RegExp(r'dependencies:[\s\S]*?(?=dev_dependencies:|flutter:[\s]*test:|$)'),
-      '$dependencies\n',
+    logger.info('Adding production dependencies...');
+    final prodResult = await Process.run(
+      'flutter',
+      ['pub', 'add', ...prodDeps],
+      workingDirectory: projectPath,
     );
 
-    // Replace dev_dependencies section
-    content = content.replaceFirst(
-      RegExp(r'dev_dependencies:[\s\S]*?(?=flutter:[\s]*sdk:|$)'),
-      '$devDependencies\n',
+    if (prodResult.exitCode != 0) {
+      logger.warning('Some dependencies may not have been added: ${prodResult.stderr}');
+    }
+
+    // Install dev dependencies using flutter pub add --dev
+    final devDeps = [
+      'clean_modular_architecture',
+      'custom_lint',
+      'mocktail',
+      'bloc_test',
+    ];
+
+    logger.info('Adding dev dependencies...');
+    final devResult = await Process.run(
+      'flutter',
+      ['pub', 'add', '--dev', ...devDeps],
+      workingDirectory: projectPath,
     );
 
-    await pubspecFile.writeAsString(content);
+    if (devResult.exitCode != 0) {
+      logger.warning('Some dev dependencies may not have been added: ${devResult.stderr}');
+    }
   }
 
   Future<void> _updateAnalysisOptions(String projectPath) async {
-    final content = '''
+    const content = '''
 include: package:flutter_lints/flutter.yaml
 
 analyzer:
@@ -438,6 +437,372 @@ class ${pascalName}App extends StatelessWidget {
     await FileUtils.createFile(
       path.join(projectPath, 'lib/main.dart'),
       content,
+    );
+  }
+
+  Future<void> _createSampleFeature(String projectPath, String projectName) async {
+    final featurePath = path.join(projectPath, 'lib/features/home');
+
+    // Create feature directories
+    final dirs = [
+      'domain/entities',
+      'domain/repositories',
+      'domain/usecases',
+      'data/models',
+      'data/datasources',
+      'data/repositories',
+      'presentation/bloc',
+      'presentation/pages',
+      'presentation/widgets',
+    ];
+
+    for (final dir in dirs) {
+      await FileUtils.ensureDirectory(path.join(featurePath, dir));
+    }
+
+    // Create sample entity
+    await FileUtils.createFile(
+      path.join(featurePath, 'domain/entities/greeting.dart'),
+      '''
+/// Sample entity demonstrating Clean Architecture principles.
+///
+/// Entities are pure data containers with:
+/// - Only final fields
+/// - A const constructor
+/// - No methods (except toString)
+/// - No copyWith, fromJson, toJson
+class Greeting {
+  final String message;
+  final DateTime timestamp;
+
+  const Greeting({
+    required this.message,
+    required this.timestamp,
+  });
+}
+''',
+    );
+
+    // Create sample model
+    await FileUtils.createFile(
+      path.join(featurePath, 'data/models/greeting_model.dart'),
+      '''
+import '../../domain/entities/greeting.dart';
+
+/// Model extending the Greeting entity.
+///
+/// Models contain all the logic entities don't have:
+/// - fromJson/toJson for serialization
+/// - copyWith for immutable updates
+/// - Any computed properties
+class GreetingModel extends Greeting {
+  const GreetingModel({
+    required super.message,
+    required super.timestamp,
+  });
+
+  factory GreetingModel.fromJson(Map<String, dynamic> json) {
+    return GreetingModel(
+      message: json['message'] as String,
+      timestamp: DateTime.parse(json['timestamp'] as String),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'message': message,
+      'timestamp': timestamp.toIso8601String(),
+    };
+  }
+
+  GreetingModel copyWith({
+    String? message,
+    DateTime? timestamp,
+  }) {
+    return GreetingModel(
+      message: message ?? this.message,
+      timestamp: timestamp ?? this.timestamp,
+    );
+  }
+
+  /// Sample factory for creating a welcome greeting.
+  static GreetingModel welcome() {
+    return GreetingModel(
+      message: 'Welcome to Clean Architecture!',
+      timestamp: DateTime.now(),
+    );
+  }
+}
+''',
+    );
+
+    // Create sample repository interface
+    await FileUtils.createFile(
+      path.join(featurePath, 'domain/repositories/home_repository.dart'),
+      '''
+import 'package:fpdart/fpdart.dart';
+import '../../../../core/errors/failures.dart';
+import '../entities/greeting.dart';
+
+/// Repository interface for home feature.
+///
+/// Note: Returns Entity types (Greeting), not Model types (GreetingModel).
+/// The implementation in data layer will return GreetingModel which extends Greeting.
+abstract interface class HomeRepository {
+  /// Gets the current greeting.
+  Future<Either<Failure, Greeting>> getGreeting();
+}
+''',
+    );
+
+    // Create sample repository implementation
+    await FileUtils.createFile(
+      path.join(featurePath, 'data/repositories/home_repository_impl.dart'),
+      '''
+import 'package:fpdart/fpdart.dart';
+import '../../../../core/errors/failures.dart';
+import '../../domain/repositories/home_repository.dart';
+import '../models/greeting_model.dart';
+
+/// Implementation of [HomeRepository].
+///
+/// Note: Returns GreetingModel which extends Greeting,
+/// satisfying the interface contract.
+class HomeRepositoryImpl implements HomeRepository {
+  HomeRepositoryImpl();
+
+  @override
+  Future<Either<Failure, GreetingModel>> getGreeting() async {
+    try {
+      // In a real app, this might fetch from an API or database
+      final greeting = GreetingModel.welcome();
+      return Right(greeting);
+    } catch (e) {
+      return const Left(ServerFailure('Failed to get greeting'));
+    }
+  }
+}
+''',
+    );
+
+    // Create sample use case
+    await FileUtils.createFile(
+      path.join(featurePath, 'domain/usecases/get_greeting.dart'),
+      '''
+import 'package:fpdart/fpdart.dart';
+import 'package:clean_modular_architecture/clean_modular_architecture.dart';
+import '../../../../core/errors/failures.dart';
+import '../entities/greeting.dart';
+import '../repositories/home_repository.dart';
+
+/// Use case for getting the greeting.
+///
+/// Use cases contain business logic and orchestrate
+/// data flow between repositories and the presentation layer.
+class GetGreeting implements UseCase<Greeting, NoParams> {
+  final HomeRepository repository;
+
+  GetGreeting(this.repository);
+
+  @override
+  Future<Either<Failure, Greeting>> call(NoParams params) async {
+    return repository.getGreeting();
+  }
+}
+''',
+    );
+
+    // Create sample BLoC
+    await FileUtils.createFile(
+      path.join(featurePath, 'presentation/bloc/home_bloc.dart'),
+      '''
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:clean_modular_architecture/clean_modular_architecture.dart';
+import '../../domain/entities/greeting.dart';
+import '../../domain/usecases/get_greeting.dart';
+
+part 'home_event.dart';
+part 'home_state.dart';
+
+/// BLoC for the home feature.
+///
+/// Handles loading and displaying the greeting.
+class HomeBloc extends Bloc<HomeEvent, HomeState> {
+  final GetGreeting getGreeting;
+
+  HomeBloc({required this.getGreeting}) : super(HomeInitial()) {
+    on<HomeLoadRequested>(_onLoadRequested);
+  }
+
+  Future<void> _onLoadRequested(
+    HomeLoadRequested event,
+    Emitter<HomeState> emit,
+  ) async {
+    emit(HomeLoading());
+
+    final result = await getGreeting(const NoParams());
+
+    result.fold(
+      (failure) => emit(HomeError(failure.message)),
+      (greeting) => emit(HomeLoaded(greeting)),
+    );
+  }
+}
+''',
+    );
+
+    // Create BLoC events
+    await FileUtils.createFile(
+      path.join(featurePath, 'presentation/bloc/home_event.dart'),
+      '''
+part of 'home_bloc.dart';
+
+/// Base class for home events.
+sealed class HomeEvent {}
+
+/// Event to request loading the home data.
+final class HomeLoadRequested extends HomeEvent {}
+''',
+    );
+
+    // Create BLoC states
+    await FileUtils.createFile(
+      path.join(featurePath, 'presentation/bloc/home_state.dart'),
+      '''
+part of 'home_bloc.dart';
+
+/// Base class for home states.
+sealed class HomeState {}
+
+/// Initial state before any data is loaded.
+final class HomeInitial extends HomeState {}
+
+/// State while data is being loaded.
+final class HomeLoading extends HomeState {}
+
+/// State when data has been successfully loaded.
+final class HomeLoaded extends HomeState {
+  final Greeting greeting;
+
+  HomeLoaded(this.greeting);
+}
+
+/// State when an error occurred.
+final class HomeError extends HomeState {
+  final String message;
+
+  HomeError(this.message);
+}
+''',
+    );
+
+    // Create sample page
+    await FileUtils.createFile(
+      path.join(featurePath, 'presentation/pages/home_page.dart'),
+      '''
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../bloc/home_bloc.dart';
+
+/// Home page demonstrating Clean Architecture.
+///
+/// Uses BlocBuilder to reactively render UI based on state.
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Clean Architecture'),
+        centerTitle: true,
+      ),
+      body: BlocBuilder<HomeBloc, HomeState>(
+        builder: (context, state) {
+          return switch (state) {
+            HomeInitial() => const _InitialView(),
+            HomeLoading() => const _LoadingView(),
+            HomeLoaded(:final greeting) => _LoadedView(message: greeting.message),
+            HomeError(:final message) => _ErrorView(message: message),
+          };
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          context.read<HomeBloc>().add(HomeLoadRequested());
+        },
+        child: const Icon(Icons.refresh),
+      ),
+    );
+  }
+}
+
+class _InitialView extends StatelessWidget {
+  const _InitialView();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text('Press the button to load greeting'),
+    );
+  }
+}
+
+class _LoadingView extends StatelessWidget {
+  const _LoadingView();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+}
+
+class _LoadedView extends StatelessWidget {
+  final String message;
+
+  const _LoadedView({required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Text(
+          message,
+          style: Theme.of(context).textTheme.headlineMedium,
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+  }
+}
+
+class _ErrorView extends StatelessWidget {
+  final String message;
+
+  const _ErrorView({required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.error_outline, size: 48, color: Colors.red),
+          const SizedBox(height: 16),
+          Text(
+            message,
+            style: Theme.of(context).textTheme.bodyLarge,
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+}
+''',
     );
   }
 }

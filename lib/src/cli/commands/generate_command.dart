@@ -11,6 +11,7 @@ import '../templates/repository_template.dart';
 import '../templates/entity_template.dart';
 import '../templates/model_template.dart';
 import '../templates/use_case_template.dart';
+import '../templates/service_template.dart';
 
 /// Command to generate architecture components.
 ///
@@ -42,6 +43,7 @@ class GenerateCommand extends Command<int> {
     addSubcommand(_GenerateEntityCommand());
     addSubcommand(_GenerateModelCommand());
     addSubcommand(_GenerateUseCaseCommand());
+    addSubcommand(_GenerateServiceCommand());
   }
 }
 
@@ -428,7 +430,7 @@ class _GenerateEntityCommand extends Command<int> {
       entitySnake: entitySnake,
     );
 
-    logger.success('Entity "$entityName" generated at: lib/features/$featureSnake/domain/entities/${entitySnake}.dart');
+    logger.success('Entity "$entityName" generated at: lib/features/$featureSnake/domain/entities/$entitySnake.dart');
     return 0;
   }
 }
@@ -582,7 +584,127 @@ class _GenerateUseCaseCommand extends Command<int> {
       useCaseType: useCaseType,
     );
 
-    logger.success('UseCase "$useCaseName" generated at: lib/features/$featureSnake/domain/usecases/${useCaseSnake}.dart');
+    logger.success('UseCase "$useCaseName" generated at: lib/features/$featureSnake/domain/usecases/$useCaseSnake.dart');
+    return 0;
+  }
+}
+
+/// Generates a service.
+class _GenerateServiceCommand extends Command<int> {
+  @override
+  final String name = 'service';
+
+  @override
+  final String description = 'Generate a service (API client, storage, etc).';
+
+  _GenerateServiceCommand() {
+    argParser
+      ..addOption(
+        'feature',
+        abbr: 'f',
+        help: 'Feature name where the service belongs.',
+        mandatory: true,
+      )
+      ..addOption(
+        'path',
+        abbr: 'p',
+        help: 'Path to the Flutter project.',
+      )
+      ..addOption(
+        'type',
+        abbr: 't',
+        help: 'Type of service (api, storage, interface).',
+        defaultsTo: 'interface',
+        allowed: ['api', 'storage', 'interface'],
+      );
+  }
+
+  @override
+  Future<int> run() async {
+    final args = argResults!.rest;
+    if (args.isEmpty) {
+      logger.error('Please provide a service name.');
+      logger.command('dart run clean_arch generate service <name> --feature <feature>');
+      return 1;
+    }
+
+    final serviceName = args.first;
+    final featureName = argResults!['feature'] as String;
+    final projectPath = argResults!['path'] as String? ?? Directory.current.path;
+    final serviceType = argResults!['type'] as String;
+
+    logger.header('Generating Service: $serviceName');
+
+    final projectRoot = FileUtils.findProjectRoot(projectPath);
+    if (projectRoot == null) {
+      logger.error('No Flutter project found.');
+      return 1;
+    }
+
+    final serviceSnake = FileUtils.toSnakeCase(serviceName);
+    final servicePascal = FileUtils.toPascalCase(serviceName);
+    final featureSnake = FileUtils.toSnakeCase(featureName);
+
+    // Create directories
+    final interfaceDir = path.join(
+      projectRoot,
+      'lib/features',
+      featureSnake,
+      'domain/services',
+    );
+    final implDir = path.join(
+      projectRoot,
+      'lib/features',
+      featureSnake,
+      'data/services',
+    );
+
+    await Directory(interfaceDir).create(recursive: true);
+    await Directory(implDir).create(recursive: true);
+
+    // Generate interface
+    final interfacePath = path.join(interfaceDir, '${serviceSnake}_service.dart');
+    await File(interfacePath).writeAsString(
+      ServiceTemplate.generateInterface(
+        serviceName: serviceName,
+        servicePascal: servicePascal,
+      ),
+    );
+    logger.success('Created: $interfacePath');
+
+    // Generate implementation based on type
+    String implContent;
+    String implFileName;
+
+    switch (serviceType) {
+      case 'api':
+        implContent = ServiceTemplate.generateApiService(
+          serviceName: serviceName,
+          servicePascal: servicePascal,
+        );
+        implFileName = '${serviceSnake}_api_service.dart';
+        break;
+      case 'storage':
+        implContent = ServiceTemplate.generateStorageService(
+          serviceName: serviceName,
+          servicePascal: servicePascal,
+        );
+        implFileName = '${serviceSnake}_storage_service.dart';
+        break;
+      default:
+        implContent = ServiceTemplate.generateImplementation(
+          serviceName: serviceName,
+          servicePascal: servicePascal,
+          featureName: featureName,
+        );
+        implFileName = '${serviceSnake}_service_impl.dart';
+    }
+
+    final implPath = path.join(implDir, implFileName);
+    await File(implPath).writeAsString(implContent);
+    logger.success('Created: $implPath');
+
+    logger.success('Service "$serviceName" generated successfully!');
     return 0;
   }
 }

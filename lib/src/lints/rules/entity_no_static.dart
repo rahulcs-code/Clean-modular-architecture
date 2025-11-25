@@ -56,10 +56,10 @@ class EntityNoStatic extends DartLintRule {
       // Check for static members
       for (final member in node.members) {
         if (member is FieldDeclaration && member.isStatic) {
-          reporter.reportErrorForNode(_code, member);
+          reporter.atNode(member, _code);
         }
         if (member is MethodDeclaration && member.isStatic) {
-          reporter.reportErrorForNode(_code, member);
+          reporter.atNode(member, _code);
         }
       }
     });

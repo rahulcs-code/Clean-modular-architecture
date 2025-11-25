@@ -60,7 +60,7 @@ class BlocInMultiprovider extends DartLintRule {
         // Check if the enclosing class extends StatelessWidget or StatefulWidget
         final enclosingClass = _findEnclosingClass(node);
         if (enclosingClass != null && _isWidgetClass(enclosingClass)) {
-          reporter.reportErrorForNode(_code, node.methodName);
+          reporter.atNode(node.methodName, _code);
         }
       }
     });
@@ -76,7 +76,7 @@ class BlocInMultiprovider extends DartLintRule {
       if (enclosingMethod != null && enclosingMethod.name.lexeme == 'build') {
         final enclosingClass = _findEnclosingClass(node);
         if (enclosingClass != null && _isWidgetClass(enclosingClass)) {
-          reporter.reportErrorForNode(_code, node.constructorName);
+          reporter.atNode(node.constructorName, _code);
         }
       }
     });

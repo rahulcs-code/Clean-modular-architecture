@@ -56,7 +56,7 @@ class RepositoryInterfaceReturnsEntity extends DartLintRule {
         if (member is MethodDeclaration) {
           final returnType = member.returnType;
           if (returnType != null && _containsModelType(returnType)) {
-            reporter.reportErrorForNode(_code, returnType);
+            reporter.atNode(returnType, _code);
           }
         }
       }

@@ -36,7 +36,7 @@ class ModelNamingConvention extends DartLintRule {
       if (_isInModelsDirectory(path)) {
         final className = node.name.lexeme;
         if (!className.endsWith('Model')) {
-          reporter.reportErrorForToken(_code, node.name);
+          reporter.atToken(node.name, _code);
         }
       }
     });

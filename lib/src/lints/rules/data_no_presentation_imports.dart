@@ -44,7 +44,7 @@ class DataNoPresentationImports extends DartLintRule {
       if (importUri == null) return;
 
       if (_isPresentationLayerImport(importUri)) {
-        reporter.reportErrorForNode(_code, node);
+        reporter.atNode(node, _code);
       }
     });
   }

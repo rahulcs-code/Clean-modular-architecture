@@ -162,13 +162,13 @@ A Flutter dev dependency package that enforces Clean Architecture patterns throu
   - [x] Add `usecase` subcommand
   - [x] Add `entity` subcommand
   - [x] Add `model` subcommand
-  - [ ] Add `service` subcommand 
+  - [x] Add `service` subcommand 
 
 - [x] **1.3.5** Create `lib/src/cli/commands/create_command.dart`
   - [x] Create new Flutter project with full CMA structure
-  - [x] Initialize pubspec.yaml with recommended dependencies
+  - [x] Install dependencies using `flutter pub add`
   - [x] Set up complete folder structure
-  - [ ] Create sample feature 
+  - [x] Create sample feature (home feature with entity, model, repository, usecase, bloc, page) 
 
 - [x] **1.3.6** Create `lib/src/cli/commands/doctor_command.dart`
   - [x] Check project structure compliance
@@ -215,7 +215,7 @@ Note: Implemented as inline Dart templates instead of Mason bricks for simplicit
   - [x] `createPlugin()` function returning `PluginBase`
   - [x] `CleanArchLintPlugin` class extending `PluginBase`
   - [x] `getLintRules()` returning list of all rules
-  - [ ] `getAssists()` returning list of quick fixes 
+  - [x] `getAssists()` returning list of quick fixes (empty for now, TODO for future) 
 
 - [x] **2.1.2** Create `lib/src/lints/utils/entity_detector.dart`
   - [x] `isEntity(ClassDeclaration node, String path)` - check if class is an entity

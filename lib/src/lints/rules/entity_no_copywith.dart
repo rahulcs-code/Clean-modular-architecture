@@ -58,7 +58,7 @@ class EntityNoCopyWith extends DartLintRule {
       for (final member in node.members) {
         if (member is MethodDeclaration) {
           if (member.name.lexeme == 'copyWith') {
-            reporter.reportErrorForNode(_code, member);
+            reporter.atNode(member, _code);
           }
         }
       }

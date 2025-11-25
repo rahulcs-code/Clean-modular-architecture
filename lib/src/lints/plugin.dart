@@ -100,4 +100,16 @@ class CleanArchLintPlugin extends PluginBase {
       CubitSimpleState(),
     ];
   }
+
+  @override
+  List<Assist> getAssists() {
+    // Quick fixes and code assists for Clean Architecture
+    // TODO: Implement assists in future versions
+    // Potential assists:
+    // - Move method from entity to model
+    // - Extract entity from model
+    // - Convert registerFactory to registerLazySingleton
+    // - Generate model from entity
+    return [];
+  }
 }

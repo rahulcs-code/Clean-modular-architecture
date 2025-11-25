@@ -65,7 +65,7 @@ class EntityNoMethods extends DartLintRule {
             continue;
           }
 
-          reporter.reportErrorForNode(_code, member);
+          reporter.atNode(member, _code);
         }
       }
     });

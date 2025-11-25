@@ -52,14 +52,14 @@ class ModelExtendsEntity extends DartLintRule {
       // Check if the model extends something
       final extendsClause = node.extendsClause;
       if (extendsClause == null) {
-        reporter.reportErrorForToken(_code, node.name);
+        reporter.atToken(node.name, _code);
         return;
       }
 
       // Check if it extends Object (implicitly no real extends)
       final superclassName = extendsClause.superclass.name2.lexeme;
       if (superclassName == 'Object') {
-        reporter.reportErrorForToken(_code, node.name);
+        reporter.atToken(node.name, _code);
       }
     });
   }

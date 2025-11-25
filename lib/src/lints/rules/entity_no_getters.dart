@@ -56,7 +56,7 @@ class EntityNoGetters extends DartLintRule {
         if (member is MethodDeclaration && member.isGetter) {
           // Check if it's a computed getter (has expression body with operations)
           if (_isComputedGetter(member)) {
-            reporter.reportErrorForNode(_code, member);
+            reporter.atNode(member, _code);
           }
         }
       }

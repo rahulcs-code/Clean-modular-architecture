@@ -49,7 +49,7 @@ class UseLazySingletonForBloc extends DartLintRule {
       if (typeArgs != null && typeArgs.arguments.isNotEmpty) {
         final typeName = typeArgs.arguments.first.toString();
         if (_isBlocOrCubit(typeName)) {
-          reporter.reportErrorForNode(_code, node);
+          reporter.atNode(node, _code);
           return;
         }
       }
@@ -65,7 +65,7 @@ class UseLazySingletonForBloc extends DartLintRule {
             if (expression is MethodInvocation || expression is InstanceCreationExpression) {
               final expressionStr = expression.toString();
               if (_blocSuffixes.any((suffix) => expressionStr.contains(suffix))) {
-                reporter.reportErrorForNode(_code, node);
+                reporter.atNode(node, _code);
               }
             }
           }

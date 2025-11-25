@@ -4,7 +4,16 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 
-import 'annotations.dart';
+// Type checkers for annotations using URL-based approach
+const _injectableChecker = TypeChecker.fromUrl(
+  'package:clean_modular_architecture/src/generators/annotations.dart#Injectable',
+);
+const _lazySingletonChecker = TypeChecker.fromUrl(
+  'package:clean_modular_architecture/src/generators/annotations.dart#LazySingleton',
+);
+const _singletonChecker = TypeChecker.fromUrl(
+  'package:clean_modular_architecture/src/generators/annotations.dart#Singleton',
+);
 
 /// Generator for dependency injection registrations.
 ///
@@ -16,8 +25,7 @@ class DiGenerator extends Generator {
     final annotatedClasses = <_AnnotatedClass>[];
 
     // Find all Injectable annotated classes
-    for (final annotatedElement
-        in library.annotatedWith(const TypeChecker.fromRuntime(Injectable))) {
+    for (final annotatedElement in library.annotatedWith(_injectableChecker)) {
       final element = annotatedElement.element;
       if (element is ClassElement) {
         annotatedClasses.add(_AnnotatedClass(
@@ -29,8 +37,7 @@ class DiGenerator extends Generator {
     }
 
     // Find all LazySingleton annotated classes
-    for (final annotatedElement
-        in library.annotatedWith(const TypeChecker.fromRuntime(LazySingleton))) {
+    for (final annotatedElement in library.annotatedWith(_lazySingletonChecker)) {
       final element = annotatedElement.element;
       if (element is ClassElement) {
         annotatedClasses.add(_AnnotatedClass(
@@ -42,8 +49,7 @@ class DiGenerator extends Generator {
     }
 
     // Find all Singleton annotated classes
-    for (final annotatedElement
-        in library.annotatedWith(const TypeChecker.fromRuntime(Singleton))) {
+    for (final annotatedElement in library.annotatedWith(_singletonChecker)) {
       final element = annotatedElement.element;
       if (element is ClassElement) {
         annotatedClasses.add(_AnnotatedClass(
@@ -64,13 +70,13 @@ class DiGenerator extends Generator {
   String _generateRegistrations(List<_AnnotatedClass> classes) {
     final buffer = StringBuffer();
 
-    buffer.writeln("// GENERATED CODE - DO NOT MODIFY BY HAND");
-    buffer.writeln("// ignore_for_file: type=lint");
+    buffer.writeln('// GENERATED CODE - DO NOT MODIFY BY HAND');
+    buffer.writeln('// ignore_for_file: type=lint');
     buffer.writeln();
     buffer.writeln("part of 'injection_container.dart';");
     buffer.writeln();
-    buffer.writeln("/// Initialize all generated dependencies.");
-    buffer.writeln("void _initGenerated(GetIt sl) {");
+    buffer.writeln('/// Initialize all generated dependencies.');
+    buffer.writeln('void _initGenerated(GetIt sl) {');
 
     for (final annotatedClass in classes) {
       final className = annotatedClass.element.name;
@@ -83,12 +89,10 @@ class DiGenerator extends Generator {
           buffer.writeln('  sl.registerLazySingleton<$registerAs>(');
           buffer.writeln('    () => $className(${_formatDependencies(dependencies)}),');
           buffer.writeln('  );');
-          break;
         case _RegistrationType.singleton:
           buffer.writeln('  sl.registerSingleton<$registerAs>(');
           buffer.writeln('    $className(${_formatDependencies(dependencies)}),');
           buffer.writeln('  );');
-          break;
       }
       buffer.writeln();
     }
@@ -103,10 +107,10 @@ class DiGenerator extends Generator {
     final asType = annotation.peek('as')?.typeValue;
 
     if (asType != null) {
-      return asType.getDisplayString(withNullability: false);
+      return asType.getDisplayString();
     }
 
-    return annotatedClass.element.name;
+    return annotatedClass.element.name ?? 'dynamic';
   }
 
   List<_Dependency> _getDependencies(ClassElement element) {
@@ -119,13 +123,16 @@ class DiGenerator extends Generator {
           orElse: () => element.constructors.first,
         );
 
-    for (final param in constructor.parameters) {
-      final paramType = param.type.getDisplayString(withNullability: false);
-      dependencies.add(_Dependency(
-        name: param.name,
-        type: paramType,
-        isNamed: param.isNamed,
-      ));
+    for (final param in constructor.formalParameters) {
+      final paramType = param.type.getDisplayString();
+      final paramName = param.name;
+      if (paramName != null) {
+        dependencies.add(_Dependency(
+          name: paramName,
+          type: paramType,
+          isNamed: param.isNamed,
+        ));
+      }
     }
 
     return dependencies;

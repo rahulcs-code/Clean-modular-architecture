@@ -52,7 +52,7 @@ class RepositoryUsesAbstractInterface extends DartLintRule {
 
       // Check if interface keyword is present
       if (node.interfaceKeyword == null) {
-        reporter.reportErrorForToken(_code, node.name);
+        reporter.atToken(node.name, _code);
       }
     });
   }
